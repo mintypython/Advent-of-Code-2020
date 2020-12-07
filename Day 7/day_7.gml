@@ -4,7 +4,7 @@ function day_7_part_1(){
 	var bags = create_bag_map(lines);
 	var total = 0;
 	for (var i = ds_map_find_first(bags); i != undefined; i = ds_map_find_next(bags, i)) {
-		if (find_target(bags, bags[? i], "shiny gold")){
+		if (find_target(bags, i, "shiny gold")){
 			total++;
 		}
 	}
@@ -17,7 +17,7 @@ function day_7_part_2() {
 	var lines = string_split(read("input.txt"), "\n");
 	
 	var bags = create_bag_map(lines);
-	var total = bag_total(bags, bags[? "shiny gold"]);
+	var total = bag_total(bags, "shiny gold");
 	ds_map_destroy(bags);
 	
 	show_debug_message(total);
@@ -47,18 +47,20 @@ function create_bag_map(array) {
 	return bags;
 }
 
-function find_target(base, map, target) {
-	for (var i = ds_map_find_first(map); i != undefined; i = ds_map_find_next(map, i)) {
-		if (i == target || find_target(base, base[? i], target))
+function find_target(map, key, target) {
+	var nodes = map[? key];
+	for (var i = ds_map_find_first(nodes); i != undefined; i = ds_map_find_next(nodes, i)) {
+		if (i == target || find_target(map, i, target))
 			return true;
 	}
 	return false;
 }
 
-function bag_total(base, map) {
+function bag_total(map, key) {
+	var nodes = map[? key];
 	var total = 0;
-	for (var i = ds_map_find_first(map); i != undefined; i = ds_map_find_next(map, i)) {
-		total += map[? i] + map[? i] * bag_total(base, base[? i]);
+	for (var i = ds_map_find_first(nodes); i != undefined; i = ds_map_find_next(nodes, i)) {
+		total += nodes[? i] + nodes[? i] * bag_total(map, i);
 	}
 	return total;
 }
